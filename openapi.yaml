@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: Ветеринарная клиника Девятайкиной Юлианы
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1/1
+    description: Dev server
+paths:
+  /clients/{client_id}/pets:
+    get:
+      summary: Метод получения питомцев клиента
+      tags:
+        - Pets
+      operationId: getClientPets
+      parameters: 
+        - name: client_id
+          in: path
+          description: ID клиента 
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный ответ со списком питомцев
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        '404':
+          description: Клиент не найден
+  /pets:
+    get:
+      summary: Метод получения списка питомцев 
+      tags:
+        - Pets
+      operationId: getPetsByOwner
+      description: Выбранное значение позволит отобразить питомцев с хозяином или без хозяина
+      parameters:
+        - name: owner
+          in: query
+          description: Значение необходимо учитывать при фильтрации
+          required: true
+          schema:
+            type: boolean
+            default: false
+            
+              
+      responses:
+        '200':
+          description: Успешный ответ со списком питомцев
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        '404':
+          description: Питомцы не найдены
+            
+
+components:
+  schemas:
+    Pet:
+      type: object
+      required:
+        - pet_id
+        - name
+        - age
+        - sex
+      properties:
+        id:
+          type: integer 
+          example: 1
+        name:
+          type: string
+          example: Шарик
+        dateBirth: 
+          type: string
+          example: 2022-05-10
+        sex:
+          type: string
+          enum:
+            - m
+            - w
+        description: 
+          type: string
+          example: Черно-белый окрас животного
+    Pets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pet"
+
+    
+        
+        
+        
